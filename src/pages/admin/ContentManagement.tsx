@@ -1,11 +1,11 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
@@ -24,8 +24,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Plus, Search, Filter, Edit, Trash2, Eye, Globe } from "lucide-react";
+import { FileText, Plus, Search, Filter, Edit, Trash2, Eye, Globe, AlertTriangle, Shield } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { errorLogger } from "@/services/errorLogger";
 
 interface ContentData {
   id: string;
@@ -45,6 +46,9 @@ const ContentManagement = () => {
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [isAddContentOpen, setIsAddContentOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [newContent, setNewContent] = useState({
     title: "",
     type: "page" as const,
@@ -125,65 +129,181 @@ const ContentManagement = () => {
     { value: "legal", label: "Legal Document" }
   ];
 
+  useEffect(() => {
+    const initializeContent = async () => {
+      try {
+        setIsLoading(true);
+        setHasError(false);
+        
+        // Simulate content loading (in real app, this would be an API call)
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        errorLogger.log('info', 'Content Management initialized successfully', undefined, {
+          component: 'ContentManagement',
+          action: 'initialize',
+          userId: 'admin'
+        });
+        
+      } catch (error) {
+        setHasError(true);
+        setErrorMessage('Failed to load content. Please try refreshing the page.');
+        errorLogger.log('error', 'Failed to initialize Content Management', error as Error, {
+          component: 'ContentManagement',
+          action: 'initialize'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeContent();
+  }, []);
+
   const filteredContents = contents.filter(content => {
-    const matchesSearch = content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         content.seoTitle.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === "all" || content.type === selectedType;
-    const matchesStatus = selectedStatus === "all" || content.status === selectedStatus;
-    return matchesSearch && matchesType && matchesStatus;
+    try {
+      const matchesSearch = content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           content.seoTitle.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesType = selectedType === "all" || content.type === selectedType;
+      const matchesStatus = selectedStatus === "all" || content.status === selectedStatus;
+      return matchesSearch && matchesType && matchesStatus;
+    } catch (error) {
+      errorLogger.log('error', 'Error filtering content', error as Error, {
+        component: 'ContentManagement',
+        action: 'filter'
+      });
+      return false;
+    }
   });
 
   const generateSlug = (title: string) => {
-    return title.toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
+    try {
+      return title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim();
+    } catch (error) {
+      errorLogger.log('error', 'Error generating slug', error as Error, {
+        component: 'ContentManagement',
+        action: 'generateSlug'
+      });
+      return 'untitled-content';
+    }
   };
 
-  const handleAddContent = () => {
-    if (!newContent.title || !newContent.seoTitle) {
+  const validateContent = (content: typeof newContent) => {
+    const errors = [];
+    
+    if (!content.title.trim()) errors.push('Title is required');
+    if (!content.seoTitle.trim()) errors.push('SEO Title is required');
+    if (content.metaDescription.length > 160) errors.push('Meta description should be under 160 characters');
+    if (content.slug && !/^[a-z0-9-]+$/.test(content.slug)) errors.push('Slug should only contain lowercase letters, numbers, and hyphens');
+    
+    return errors;
+  };
+
+  const handleAddContent = async () => {
+    try {
+      setIsLoading(true);
+      
+      const validationErrors = validateContent(newContent);
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join(', '));
+      }
+
+      const content: ContentData = {
+        id: Date.now().toString(),
+        ...newContent,
+        author: "Admin",
+        slug: newContent.slug || generateSlug(newContent.title),
+        createdDate: new Date().toISOString().split('T')[0],
+        lastModified: new Date().toISOString().split('T')[0]
+      };
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setContents([...contents, content]);
+      setNewContent({
+        title: "",
+        type: "page",
+        status: "draft",
+        seoTitle: "",
+        metaDescription: "",
+        slug: "",
+        content: ""
+      });
+      setIsAddContentOpen(false);
+      
+      toast({
+        title: "Success",
+        description: "Content created successfully.",
+      });
+
+      errorLogger.log('info', 'Content created successfully', undefined, {
+        component: 'ContentManagement',
+        action: 'create',
+        contentId: content.id
+      });
+      
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred';
       toast({
         title: "Error",
-        description: "Please fill in all required fields.",
+        description: errorMsg,
         variant: "destructive",
       });
-      return;
+
+      errorLogger.log('error', 'Failed to create content', error as Error, {
+        component: 'ContentManagement',
+        action: 'create'
+      });
+    } finally {
+      setIsLoading(false);
     }
-
-    const content: ContentData = {
-      id: Date.now().toString(),
-      ...newContent,
-      author: "Admin",
-      slug: newContent.slug || generateSlug(newContent.title),
-      createdDate: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0]
-    };
-
-    setContents([...contents, content]);
-    setNewContent({
-      title: "",
-      type: "page",
-      status: "draft",
-      seoTitle: "",
-      metaDescription: "",
-      slug: "",
-      content: ""
-    });
-    setIsAddContentOpen(false);
-    
-    toast({
-      title: "Success",
-      description: "Content created successfully.",
-    });
   };
 
-  const handleDeleteContent = (contentId: string) => {
-    setContents(contents.filter(content => content.id !== contentId));
-    toast({
-      title: "Success",
-      description: "Content deleted successfully.",
-    });
+  const handleDelete = async (contentId: string) => {
+    try {
+      setIsLoading(true);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setContents(contents.filter(content => content.id !== contentId));
+      
+      toast({
+        title: "Success",
+        description: "Content deleted successfully.",
+      });
+
+      errorLogger.log('info', 'Content deleted successfully', undefined, {
+        component: 'ContentManagement',
+        action: 'delete',
+        contentId
+      });
+      
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete content. Please try again.",
+        variant: "destructive",
+      });
+
+      errorLogger.log('error', 'Failed to delete content', error as Error, {
+        component: 'ContentManagement',
+        action: 'delete',
+        contentId
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const retryOperation = () => {
+    setHasError(false);
+    setErrorMessage("");
+    window.location.reload();
   };
 
   const getStatusBadgeColor = (status: string) => {
@@ -205,6 +325,30 @@ const ContentManagement = () => {
     }
   };
 
+  if (hasError) {
+    return (
+      <AdminLayout>
+        <div className="space-y-6">
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>System Error</AlertTitle>
+            <AlertDescription className="mt-2">
+              {errorMessage}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="ml-4"
+                onClick={retryOperation}
+              >
+                Retry
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -217,7 +361,7 @@ const ContentManagement = () => {
           
           <Dialog open={isAddContentOpen} onOpenChange={setIsAddContentOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button className="bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
                 <Plus className="w-4 h-4 mr-2" />
                 Create Content
               </Button>
@@ -276,6 +420,9 @@ const ContentManagement = () => {
                     placeholder="Brief description for search engines (150-160 characters)"
                     rows={2}
                   />
+                  <p className="text-xs text-gray-500">
+                    {newContent.metaDescription.length}/160 characters
+                  </p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -314,13 +461,28 @@ const ContentManagement = () => {
                   />
                 </div>
                 
-                <Button onClick={handleAddContent} className="w-full">
-                  Create Content
+                <Button 
+                  onClick={handleAddContent} 
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating..." : "Create Content"}
                 </Button>
               </div>
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* System Status Alert */}
+        {isLoading && (
+          <Alert>
+            <Shield className="h-4 w-4" />
+            <AlertTitle>Processing</AlertTitle>
+            <AlertDescription>
+              Please wait while we process your request...
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -461,8 +623,9 @@ const ContentManagement = () => {
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            onClick={() => handleDeleteContent(content.id)}
+                            onClick={() => handleDelete(content.id)}
                             className="text-red-600 hover:text-red-700"
+                            disabled={isLoading}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

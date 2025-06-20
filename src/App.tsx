@@ -12,6 +12,7 @@ import ServiceManagement from "./pages/admin/ServiceManagement";
 import ContentManagement from "./pages/admin/ContentManagement";
 import Analytics from "./pages/admin/Analytics";
 import Settings from "./pages/admin/Settings";
+import Troubleshooting from "./pages/admin/Troubleshooting";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/admin/content" element={<ContentManagement />} />
             <Route path="/admin/analytics" element={<Analytics />} />
             <Route path="/admin/settings" element={<Settings />} />
+            <Route path="/admin/troubleshooting" element={<Troubleshooting />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
