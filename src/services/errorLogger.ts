@@ -1,4 +1,3 @@
-
 interface ErrorLog {
   id: string;
   timestamp: Date;
@@ -10,6 +9,7 @@ interface ErrorLog {
   userId?: string;
   action?: string;
   component?: string;
+  contentId?: string;
 }
 
 class ErrorLogger {
