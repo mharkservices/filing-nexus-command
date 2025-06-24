@@ -19,6 +19,12 @@ import ContentManagement from "./pages/admin/ContentManagement";
 import Analytics from "./pages/admin/Analytics";
 import Settings from "./pages/admin/Settings";
 import Troubleshooting from "./pages/admin/Troubleshooting";
+import RegistrationsPage from "./pages/public/RegistrationsPage";
+import CompliancePage from "./pages/public/CompliancePage";
+import GSTPage from "./pages/public/GSTPage";
+import IncomeTaxPage from "./pages/public/IncomeTaxPage";
+import MCAPage from "./pages/public/MCAPage";
+import HRAPage from "./pages/public/HRAPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +40,12 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/home" element={<Homepage />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/services/registrations" element={<RegistrationsPage />} />
+            <Route path="/services/compliance" element={<CompliancePage />} />
+            <Route path="/services/gst" element={<GSTPage />} />
+            <Route path="/services/income-tax" element={<IncomeTaxPage />} />
+            <Route path="/services/mca" element={<MCAPage />} />
+            <Route path="/services/hra" element={<HRAPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
