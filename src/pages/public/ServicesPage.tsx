@@ -4,57 +4,57 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Building, FileText, Shield, Clock, DollarSign, Users, CheckCircle, ArrowRight } from 'lucide-react';
+import { Building, FileText, Shield, Clock, DollarSign, Users, CheckCircle, ArrowRight, BookOpen, Briefcase } from 'lucide-react';
 import PublicLayout from '@/components/public/PublicLayout';
 
 const ServicesPage = () => {
   const services = [
     {
       icon: Building,
-      title: 'Business Registration & Incorporation',
-      description: 'Complete business formation services including LLC, Corporation, and Partnership registrations.',
-      features: ['State filing assistance', 'EIN application', 'Operating agreements', 'Corporate bylaws'],
-      price: 'Starting at $199',
-      popular: false
-    },
-    {
-      icon: FileText,
-      title: 'Tax Document Preparation',
-      description: 'Professional tax preparation and filing services for individuals and businesses.',
-      features: ['Form preparation', 'Tax optimization', 'Quarterly filings', 'Audit support'],
-      price: 'Starting at $149',
+      title: 'Private Limited Company Registration',
+      description: 'Complete registration of Private Limited Company with all legal formalities and documentation.',
+      features: ['MOA & AOA preparation', 'DIN & DSC for directors', 'Name reservation', 'ROC filing'],
+      price: '₹6,999',
       popular: true
     },
     {
-      icon: Shield,
-      title: 'Compliance Management',
-      description: 'Stay compliant with ongoing regulatory requirements and annual reporting obligations.',
-      features: ['Annual reports', 'License renewals', 'Compliance tracking', 'Deadline reminders'],
-      price: 'Starting at $99/month',
+      icon: FileText,
+      title: 'LLP Registration',
+      description: 'Limited Liability Partnership registration with complete documentation and compliance.',
+      features: ['LLP agreement drafting', 'DIN & DSC for partners', 'Name approval', 'ROC registration'],
+      price: '₹4,999',
       popular: false
     },
     {
-      icon: Clock,
-      title: 'Document Storage & Retrieval',
-      description: 'Secure cloud-based document management with instant access and advanced search.',
-      features: ['Unlimited storage', 'Advanced search', 'Version control', '24/7 access'],
-      price: 'Starting at $29/month',
+      icon: Shield,
+      title: 'GST Registration',
+      description: 'Goods and Services Tax registration for businesses across all states in India.',
+      features: ['GST application filing', 'Document verification', 'State-wise registration', 'GST certificate'],
+      price: '₹2,499',
+      popular: false
+    },
+    {
+      icon: Briefcase,
+      title: 'Trademark Registration',
+      description: 'Protect your brand with comprehensive trademark registration services.',
+      features: ['Trademark search', 'Application filing', 'Response to objections', 'Registration certificate'],
+      price: '₹4,999',
+      popular: false
+    },
+    {
+      icon: BookOpen,
+      title: 'Annual ROC Compliance',
+      description: 'Complete annual compliance filing for companies and LLPs with ROC.',
+      features: ['Annual return filing', 'Financial statement filing', 'AOC-4 preparation', 'MGT-7 filing'],
+      price: '₹3,999',
       popular: false
     },
     {
       icon: DollarSign,
-      title: 'Financial Filing Services',
-      description: 'Comprehensive financial document preparation and regulatory filing assistance.',
-      features: ['Financial statements', 'SEC filings', 'Bank submissions', 'Investor reports'],
-      price: 'Custom pricing',
-      popular: false
-    },
-    {
-      icon: Users,
-      title: 'Consulting & Support',
-      description: 'Expert guidance and personalized consulting for complex filing requirements.',
-      features: ['One-on-one consultation', 'Strategy planning', 'Custom solutions', 'Priority support'],
-      price: 'Starting at $150/hour',
+      title: 'Income Tax Return Filing',
+      description: 'Professional ITR filing services for individuals and businesses.',
+      features: ['ITR-1 to ITR-7 filing', 'Tax computation', 'Refund processing', 'Notice handling'],
+      price: '₹1,499',
       popular: false
     }
   ];
@@ -62,37 +62,37 @@ const ServicesPage = () => {
   const processSteps = [
     {
       step: '01',
-      title: 'Consultation',
-      description: 'We discuss your specific needs and requirements to create a customized plan.'
+      title: 'Document Collection',
+      description: 'We help you gather all required documents and verify their authenticity.'
     },
     {
       step: '02',
-      title: 'Documentation',
-      description: 'Our experts prepare and review all necessary documents with attention to detail.'
+      title: 'Application Preparation',
+      description: 'Our experts prepare your application with attention to detail and accuracy.'
     },
     {
       step: '03',
-      title: 'Filing',
-      description: 'We handle all submissions and communications with relevant authorities.'
+      title: 'Government Filing',
+      description: 'We handle all government submissions and track the application status.'
     },
     {
       step: '04',
-      title: 'Follow-up',
-      description: 'Ongoing support and monitoring to ensure continued compliance and success.'
+      title: 'Certificate Delivery',
+      description: 'Receive your certificates and maintain ongoing compliance support.'
     }
   ];
 
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+      <section className="bg-gradient-to-br from-orange-50 to-sky-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Professional Filing Services
+            Business Registration & Compliance Services
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive solutions for all your document filing and compliance needs. 
-            From business formation to ongoing maintenance, we've got you covered.
+            Comprehensive solutions for company registration, tax filing, and regulatory compliance. 
+            Trusted by over 50,000+ businesses across India.
           </p>
         </div>
       </section>
@@ -105,26 +105,26 @@ const ServicesPage = () => {
               Our Services
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose from our comprehensive range of professional filing services designed to meet your unique needs.
+              Choose from our comprehensive range of business registration and compliance services.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <Card key={index} className={`relative hover:shadow-lg transition-shadow ${service.popular ? 'ring-2 ring-blue-500' : ''}`}>
+              <Card key={index} className={`relative hover:shadow-lg transition-shadow ${service.popular ? 'ring-2 ring-orange-500' : ''}`}>
                 {service.popular && (
-                  <Badge className="absolute -top-2 left-4 bg-blue-500">Most Popular</Badge>
+                  <Badge className="absolute -top-2 left-4 bg-orange-500">Most Popular</Badge>
                 )}
                 <CardHeader>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <service.icon className="h-6 w-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <service.icon className="h-6 w-6 text-orange-600" />
                   </div>
                   <CardTitle className="text-xl">{service.title}</CardTitle>
                   <CardDescription>{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="mb-6">
-                    <div className="text-2xl font-bold text-blue-600 mb-4">{service.price}</div>
+                    <div className="text-2xl font-bold text-orange-600 mb-4">{service.price}</div>
                     <ul className="space-y-2">
                       {service.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center space-x-2">
@@ -134,7 +134,7 @@ const ServicesPage = () => {
                       ))}
                     </ul>
                   </div>
-                  <Button className="w-full" asChild>
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700" asChild>
                     <Link to="/contact">Get Started</Link>
                   </Button>
                 </CardContent>
@@ -152,14 +152,14 @@ const ServicesPage = () => {
               Our Process
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We follow a proven process to ensure your filing needs are met efficiently and accurately.
+              We follow a proven 4-step process to ensure your business registration is completed efficiently.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {processSteps.map((step, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                <div className="w-16 h-16 bg-orange-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   {step.step}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.title}</h3>
@@ -171,17 +171,17 @@ const ServicesPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
+      <section className="py-20 bg-gradient-to-r from-orange-600 to-sky-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Need a Custom Solution?
+            Ready to Start Your Business?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Every business is unique. Contact us to discuss your specific requirements and get a customized quote.
+          <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of entrepreneurs who have successfully registered their businesses with us.
           </p>
           <Button size="lg" variant="secondary" asChild>
             <Link to="/contact">
-              Contact Us Today
+              Start Registration Today
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>

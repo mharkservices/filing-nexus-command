@@ -31,7 +31,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/home" className="flex items-center space-x-2">
-              <FileText className="h-8 w-8 text-blue-600" />
+              <FileText className="h-8 w-8 text-orange-600" />
               <span className="text-xl font-bold text-gray-900">ZenithFilings</span>
             </Link>
 
@@ -43,14 +43,14 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                   to={item.href}
                   className={`px-3 py-2 text-sm font-medium transition-colors ${
                     isActive(item.href)
-                      ? 'text-blue-600 border-b-2 border-blue-600'
-                      : 'text-gray-700 hover:text-blue-600'
+                      ? 'text-orange-600 border-b-2 border-orange-600'
+                      : 'text-gray-700 hover:text-orange-600'
                   }`}
                 >
                   {item.name}
                 </Link>
               ))}
-              <Button asChild>
+              <Button className="bg-orange-600 hover:bg-orange-700" asChild>
                 <Link to="/login">Admin Portal</Link>
               </Button>
             </div>
@@ -77,8 +77,8 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                     to={item.href}
                     className={`px-3 py-2 text-sm font-medium transition-colors ${
                       isActive(item.href)
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-orange-600 bg-orange-50'
+                        : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -90,7 +90,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                   className="mx-3 mt-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <Button className="w-full">Admin Portal</Button>
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700">Admin Portal</Button>
                 </Link>
               </div>
             </div>
@@ -109,11 +109,12 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <FileText className="h-6 w-6 text-blue-400" />
+                <FileText className="h-6 w-6 text-orange-400" />
                 <span className="text-lg font-bold">ZenithFilings</span>
               </div>
               <p className="text-gray-400 mb-4">
-                Professional filing services with expert guidance and secure document management.
+                India's leading platform for business registration and compliance services. 
+                Trusted by over 50,000+ entrepreneurs nationwide.
               </p>
               <div className="text-sm text-gray-400">
                 © 2024 ZenithFilings. All rights reserved.
@@ -123,10 +124,10 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Services</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/services" className="hover:text-white transition-colors">Document Filing</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">Compliance Management</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">Business Registration</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">Tax Preparation</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">Company Registration</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">LLP Registration</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">GST Registration</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">Trademark Filing</Link></li>
               </ul>
             </div>
             
