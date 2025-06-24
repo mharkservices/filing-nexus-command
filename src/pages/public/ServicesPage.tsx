@@ -1,10 +1,17 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Building, FileText, Shield, Clock, DollarSign, Users, CheckCircle, ArrowRight, BookOpen, Briefcase } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Building, FileText, Shield, Clock, DollarSign, Users, CheckCircle, ArrowRight, BookOpen, Briefcase, ChevronDown } from 'lucide-react';
 import PublicLayout from '@/components/public/PublicLayout';
 
 const ServicesPage = () => {
@@ -82,6 +89,39 @@ const ServicesPage = () => {
     }
   ];
 
+  const serviceCategories = [
+    {
+      name: 'Registrations',
+      path: '/services/registrations',
+      description: 'Company registration and business setup services'
+    },
+    {
+      name: 'Compliance',
+      path: '/services/compliance',
+      description: 'Annual compliance and regulatory filing services'
+    },
+    {
+      name: 'GST',
+      path: '/services/gst',
+      description: 'GST registration, filing and compliance services'
+    },
+    {
+      name: 'Income Tax',
+      path: '/services/income-tax',
+      description: 'Income tax return filing and tax planning services'
+    },
+    {
+      name: 'MCA',
+      path: '/services/mca',
+      description: 'Ministry of Corporate Affairs related services'
+    },
+    {
+      name: 'HRA',
+      path: '/services/hra',
+      description: 'House Rent Allowance and related tax services'
+    }
+  ];
+
   return (
     <PublicLayout>
       {/* Hero Section */}
@@ -90,10 +130,37 @@ const ServicesPage = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Business Registration & Compliance Services
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Comprehensive solutions for company registration, tax filing, and regulatory compliance. 
             Trusted by over 50,000+ businesses across India.
           </p>
+          
+          {/* Service Categories Dropdown */}
+          <div className="flex justify-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
+                  Browse Service Categories
+                  <ChevronDown className="ml-2 h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
+                <DropdownMenuLabel className="text-orange-600 font-semibold">Service Categories</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {serviceCategories.map((category) => (
+                  <DropdownMenuItem key={category.name} asChild>
+                    <Link 
+                      to={category.path}
+                      className="flex flex-col items-start p-3 hover:bg-orange-50 cursor-pointer"
+                    >
+                      <span className="font-medium text-gray-900">{category.name}</span>
+                      <span className="text-sm text-gray-600">{category.description}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </section>
 
