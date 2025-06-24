@@ -39,6 +39,7 @@ interface ContentData {
   seoTitle: string;
   metaDescription: string;
   slug: string;
+  content?: string;
 }
 
 const ContentManagement = () => {
@@ -46,9 +47,13 @@ const ContentManagement = () => {
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [isAddContentOpen, setIsAddContentOpen] = useState(false);
+  const [isEditContentOpen, setIsEditContentOpen] = useState(false);
+  const [isViewContentOpen, setIsViewContentOpen] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<ContentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [editingContent, setEditingContent] = useState<ContentData | null>(null);
   const [newContent, setNewContent] = useState({
     title: "",
     type: "page" as const,
@@ -70,7 +75,8 @@ const ContentManagement = () => {
       lastModified: "2024-01-15",
       seoTitle: "Complete Guide to Private Limited Company Registration in India",
       metaDescription: "Learn how to register a private limited company in India with step-by-step guide, required documents, and fees.",
-      slug: "private-limited-company-registration-guide"
+      slug: "private-limited-company-registration-guide",
+      content: "This comprehensive guide covers everything you need to know about registering a private limited company in India..."
     },
     {
       id: "2",
@@ -82,7 +88,8 @@ const ContentManagement = () => {
       lastModified: "2024-01-14",
       seoTitle: "GST Registration Online - Documents, Process & Fees",
       metaDescription: "Complete guide to GST registration in India. Know the process, required documents, and fees for GST registration.",
-      slug: "gst-registration-process"
+      slug: "gst-registration-process",
+      content: "GST registration is mandatory for businesses with turnover exceeding Rs. 20 lakhs..."
     },
     {
       id: "3",
@@ -94,7 +101,8 @@ const ContentManagement = () => {
       lastModified: "2024-01-13",
       seoTitle: "Business Compliance Requirements in India 2024",
       metaDescription: "Stay compliant with latest business regulations in India. Complete guide to business compliance requirements.",
-      slug: "business-compliance-2024"
+      slug: "business-compliance-2024",
+      content: "Business compliance has become increasingly important in 2024 with new regulations..."
     },
     {
       id: "4",
@@ -106,7 +114,8 @@ const ContentManagement = () => {
       lastModified: "2024-01-12",
       seoTitle: "Terms of Service - ZenithFilings",
       metaDescription: "Terms and conditions for using ZenithFilings services and platform.",
-      slug: "terms-of-service"
+      slug: "terms-of-service",
+      content: "These terms of service govern your use of our platform and services..."
     },
     {
       id: "5",
@@ -118,7 +127,8 @@ const ContentManagement = () => {
       lastModified: "2024-01-10",
       seoTitle: "Trademark Registration Services Now Available",
       metaDescription: "Protect your brand with our new trademark registration services. Get started today.",
-      slug: "trademark-registration-launch"
+      slug: "trademark-registration-launch",
+      content: "We're excited to announce the launch of our new trademark registration services..."
     }
   ]);
 
@@ -200,6 +210,79 @@ const ContentManagement = () => {
     if (content.slug && !/^[a-z0-9-]+$/.test(content.slug)) errors.push('Slug should only contain lowercase letters, numbers, and hyphens');
     
     return errors;
+  };
+
+  const handleViewContent = (content: ContentData) => {
+    setSelectedContent(content);
+    setIsViewContentOpen(true);
+  };
+
+  const handleEditContent = (content: ContentData) => {
+    setEditingContent(content);
+    setIsEditContentOpen(true);
+  };
+
+  const handleUpdateContent = async () => {
+    if (!editingContent) return;
+    
+    try {
+      setIsLoading(true);
+      
+      const validationErrors = validateContent({
+        title: editingContent.title,
+        type: editingContent.type,
+        status: editingContent.status,
+        seoTitle: editingContent.seoTitle,
+        metaDescription: editingContent.metaDescription,
+        slug: editingContent.slug,
+        content: editingContent.content || ""
+      });
+      
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join(', '));
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const updatedContent = {
+        ...editingContent,
+        lastModified: new Date().toISOString().split('T')[0]
+      };
+
+      setContents(contents.map(content => 
+        content.id === editingContent.id ? updatedContent : content
+      ));
+      
+      setIsEditContentOpen(false);
+      setEditingContent(null);
+      
+      toast({
+        title: "Success",
+        description: "Content updated successfully.",
+      });
+
+      errorLogger.log('info', 'Content updated successfully', undefined, {
+        component: 'ContentManagement',
+        action: 'update',
+        contentId: editingContent.id
+      });
+      
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred';
+      toast({
+        title: "Error",
+        description: errorMsg,
+        variant: "destructive",
+      });
+
+      errorLogger.log('error', 'Failed to update content', error as Error, {
+        component: 'ContentManagement',
+        action: 'update'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAddContent = async () => {
@@ -473,6 +556,187 @@ const ContentManagement = () => {
           </Dialog>
         </div>
 
+        {/* View Content Dialog */}
+        <Dialog open={isViewContentOpen} onOpenChange={setIsViewContentOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{selectedContent?.title}</DialogTitle>
+              <DialogDescription>
+                {selectedContent?.seoTitle}
+              </DialogDescription>
+            </DialogHeader>
+            {selectedContent && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Type</Label>
+                    <Badge variant="secondary" className={getTypeBadgeColor(selectedContent.type)}>
+                      {contentTypes.find(type => type.value === selectedContent.type)?.label}
+                    </Badge>
+                  </div>
+                  <div>
+                    <Label>Status</Label>
+                    <Badge variant="secondary" className={getStatusBadgeColor(selectedContent.status)}>
+                      {selectedContent.status.charAt(0).toUpperCase() + selectedContent.status.slice(1)}
+                    </Badge>
+                  </div>
+                </div>
+                <div>
+                  <Label>URL Slug</Label>
+                  <p className="text-sm text-gray-600">/{selectedContent.slug}</p>
+                </div>
+                <div>
+                  <Label>Meta Description</Label>
+                  <p className="text-sm text-gray-600">{selectedContent.metaDescription}</p>
+                </div>
+                <div>
+                  <Label>Author</Label>
+                  <p className="text-sm text-gray-600">{selectedContent.author}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Created</Label>
+                    <p className="text-sm text-gray-600">{selectedContent.createdDate}</p>
+                  </div>
+                  <div>
+                    <Label>Last Modified</Label>
+                    <p className="text-sm text-gray-600">{selectedContent.lastModified}</p>
+                  </div>
+                </div>
+                {selectedContent.content && (
+                  <div>
+                    <Label>Content</Label>
+                    <div className="mt-2 p-4 bg-gray-50 rounded-md">
+                      <p className="text-sm whitespace-pre-wrap">{selectedContent.content}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Content Dialog */}
+        <Dialog open={isEditContentOpen} onOpenChange={setIsEditContentOpen}>
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Edit Content</DialogTitle>
+              <DialogDescription>
+                Modify the content details and settings.
+              </DialogDescription>
+            </DialogHeader>
+            {editingContent && (
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-title">Title</Label>
+                    <Input
+                      id="edit-title"
+                      value={editingContent.title}
+                      onChange={(e) => setEditingContent({ ...editingContent, title: e.target.value })}
+                      placeholder="Enter content title"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-type">Content Type</Label>
+                    <Select value={editingContent.type} onValueChange={(value: any) => setEditingContent({ ...editingContent, type: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {contentTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="edit-seoTitle">SEO Title</Label>
+                  <Input
+                    id="edit-seoTitle"
+                    value={editingContent.seoTitle}
+                    onChange={(e) => setEditingContent({ ...editingContent, seoTitle: e.target.value })}
+                    placeholder="SEO optimized title for search engines"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="edit-metaDescription">Meta Description</Label>
+                  <Textarea
+                    id="edit-metaDescription"
+                    value={editingContent.metaDescription}
+                    onChange={(e) => setEditingContent({ ...editingContent, metaDescription: e.target.value })}
+                    placeholder="Brief description for search engines (150-160 characters)"
+                    rows={2}
+                  />
+                  <p className="text-xs text-gray-500">
+                    {editingContent.metaDescription.length}/160 characters
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-slug">URL Slug</Label>
+                    <Input
+                      id="edit-slug"
+                      value={editingContent.slug}
+                      onChange={(e) => setEditingContent({ ...editingContent, slug: e.target.value })}
+                      placeholder="url-friendly-slug"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-status">Status</Label>
+                    <Select value={editingContent.status} onValueChange={(value: any) => setEditingContent({ ...editingContent, status: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="published">Published</SelectItem>
+                        <SelectItem value="archived">Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="edit-content">Content</Label>
+                  <Textarea
+                    id="edit-content"
+                    value={editingContent.content || ""}
+                    onChange={(e) => setEditingContent({ ...editingContent, content: e.target.value })}
+                    placeholder="Write your content here..."
+                    rows={6}
+                  />
+                </div>
+                
+                <div className="flex space-x-2">
+                  <Button 
+                    onClick={handleUpdateContent} 
+                    className="flex-1"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Updating..." : "Update Content"}
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      setIsEditContentOpen(false);
+                      setEditingContent(null);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
         {/* System Status Alert */}
         {isLoading && (
           <Alert>
@@ -614,10 +878,20 @@ const ContentManagement = () => {
                       <TableCell>{content.lastModified}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end space-x-2">
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleViewContent(content)}
+                            title="View content"
+                          >
                             <Eye className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleEditContent(content)}
+                            title="Edit content"
+                          >
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button 
@@ -626,6 +900,7 @@ const ContentManagement = () => {
                             onClick={() => handleDelete(content.id)}
                             className="text-red-600 hover:text-red-700"
                             disabled={isLoading}
+                            title="Delete content"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
