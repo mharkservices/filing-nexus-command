@@ -4,6 +4,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import ServiceHierarchy from "@/components/admin/ServiceHierarchy";
 import ServiceStats from "@/components/admin/ServiceStats";
 import DocumentManagement from "@/components/admin/DocumentManagement";
+import WorkflowManagement from "@/components/admin/WorkflowManagement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ServiceCategory, ServiceData } from "@/types/service";
 
@@ -98,7 +99,7 @@ const ServiceManagement = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Service Management</h1>
-          <p className="text-gray-600 mt-1">Manage your service hierarchy, pricing, and document configurations</p>
+          <p className="text-gray-600 mt-1">Manage your service hierarchy, pricing, document configurations, and workflows</p>
         </div>
 
         {/* Stats Cards */}
@@ -106,9 +107,10 @@ const ServiceManagement = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="hierarchy" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="hierarchy">Service Hierarchy</TabsTrigger>
             <TabsTrigger value="documents">Document Management</TabsTrigger>
+            <TabsTrigger value="workflows">Workflow Management</TabsTrigger>
           </TabsList>
           
           <TabsContent value="hierarchy" className="space-y-6">
@@ -120,6 +122,10 @@ const ServiceManagement = () => {
           
           <TabsContent value="documents" className="space-y-6">
             <DocumentManagement />
+          </TabsContent>
+          
+          <TabsContent value="workflows" className="space-y-6">
+            <WorkflowManagement services={services} />
           </TabsContent>
         </Tabs>
       </div>

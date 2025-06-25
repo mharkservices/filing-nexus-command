@@ -1,4 +1,10 @@
 
+export interface ValidationRule {
+  type: 'expiry_date' | 'min_info' | 'format_specific';
+  value: string;
+  message: string;
+}
+
 export interface DocumentTemplate {
   id: string;
   name: string;
