@@ -42,6 +42,16 @@ interface ContentData {
   content?: string;
 }
 
+interface NewContentData {
+  title: string;
+  type: "page" | "blog" | "service" | "legal";
+  status: "published" | "draft" | "archived";
+  seoTitle: string;
+  metaDescription: string;
+  slug: string;
+  content: string;
+}
+
 const ContentManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("all");
@@ -54,10 +64,10 @@ const ContentManagement = () => {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [editingContent, setEditingContent] = useState<ContentData | null>(null);
-  const [newContent, setNewContent] = useState({
+  const [newContent, setNewContent] = useState<NewContentData>({
     title: "",
-    type: "page" as const,
-    status: "draft" as const,
+    type: "page",
+    status: "draft",
     seoTitle: "",
     metaDescription: "",
     slug: "",
@@ -201,7 +211,7 @@ const ContentManagement = () => {
     }
   };
 
-  const validateContent = (content: typeof newContent) => {
+  const validateContent = (content: NewContentData) => {
     const errors = [];
     
     if (!content.title.trim()) errors.push('Title is required');
@@ -469,7 +479,7 @@ const ContentManagement = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="type">Content Type</Label>
-                    <Select value={newContent.type} onValueChange={(value: any) => setNewContent({ ...newContent, type: value })}>
+                    <Select value={newContent.type} onValueChange={(value: "page" | "blog" | "service" | "legal") => setNewContent({ ...newContent, type: value })}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -520,7 +530,7 @@ const ContentManagement = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="status">Status</Label>
-                    <Select value={newContent.status} onValueChange={(value: any) => setNewContent({ ...newContent, status: value })}>
+                    <Select value={newContent.status} onValueChange={(value: "published" | "draft" | "archived") => setNewContent({ ...newContent, status: value })}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -639,7 +649,7 @@ const ContentManagement = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="edit-type">Content Type</Label>
-                    <Select value={editingContent.type} onValueChange={(value: any) => setEditingContent({ ...editingContent, type: value })}>
+                    <Select value={editingContent.type} onValueChange={(value: "page" | "blog" | "service" | "legal") => setEditingContent({ ...editingContent, type: value })}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -690,7 +700,7 @@ const ContentManagement = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="edit-status">Status</Label>
-                    <Select value={editingContent.status} onValueChange={(value: any) => setEditingContent({ ...editingContent, status: value })}>
+                    <Select value={editingContent.status} onValueChange={(value: "published" | "draft" | "archived") => setEditingContent({ ...editingContent, status: value })}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
