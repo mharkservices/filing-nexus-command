@@ -25,6 +25,7 @@ import GSTPage from "./pages/public/GSTPage";
 import IncomeTaxPage from "./pages/public/IncomeTaxPage";
 import MCAPage from "./pages/public/MCAPage";
 import HRAPage from "./pages/public/HRAPage";
+import UserDashboard from "./pages/user/UserDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/blog/:id" element={<BlogPostPage />} />
             <Route path="/docs" element={<DocumentationPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/services" element={<ServiceManagement />} />
             <Route path="/admin/content" element={<ContentManagement />} />
