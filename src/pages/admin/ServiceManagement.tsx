@@ -3,6 +3,8 @@ import { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import ServiceHierarchy from "@/components/admin/ServiceHierarchy";
 import ServiceStats from "@/components/admin/ServiceStats";
+import DocumentManagement from "@/components/admin/DocumentManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ServiceCategory, ServiceData } from "@/types/service";
 
 const ServiceManagement = () => {
@@ -96,17 +98,30 @@ const ServiceManagement = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Service Management</h1>
-          <p className="text-gray-600 mt-1">Manage your service hierarchy, pricing, and configurations</p>
+          <p className="text-gray-600 mt-1">Manage your service hierarchy, pricing, and document configurations</p>
         </div>
 
         {/* Stats Cards */}
         <ServiceStats services={services} />
 
-        {/* Service Hierarchy */}
-        <ServiceHierarchy 
-          services={services} 
-          onServicesChange={handleServicesChange}
-        />
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="hierarchy" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="hierarchy">Service Hierarchy</TabsTrigger>
+            <TabsTrigger value="documents">Document Management</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="hierarchy" className="space-y-6">
+            <ServiceHierarchy 
+              services={services} 
+              onServicesChange={handleServicesChange}
+            />
+          </TabsContent>
+          
+          <TabsContent value="documents" className="space-y-6">
+            <DocumentManagement />
+          </TabsContent>
+        </Tabs>
       </div>
     </AdminLayout>
   );
