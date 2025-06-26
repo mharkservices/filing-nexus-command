@@ -13,7 +13,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: "super_admin" | "admin" | "editor";
+  role: "super_admin" | "admin" | "editor" | "user";
   permissions: string[];
   avatar?: string;
 }
@@ -35,23 +35,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate login API call
-    if (email === "admin@zenithfilings.com" && password === "admin123") {
-      const userData: User = {
-        id: "1",
-        name: "Super Admin",
+    // Demo login credentials
+    const demoCredentials = [
+      {
         email: "admin@zenithfilings.com",
-        role: "super_admin",
-        permissions: ["all"],
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-      };
-      
+        password: "admin123",
+        userData: {
+          id: "1",
+          name: "Super Admin",
+          email: "admin@zenithfilings.com",
+          role: "super_admin" as const,
+          permissions: ["all"],
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+        }
+      },
+      {
+        email: "user@zenithfilings.com",
+        password: "user123",
+        userData: {
+          id: "2",
+          name: "Demo User",
+          email: "user@zenithfilings.com",
+          role: "user" as const,
+          permissions: ["view_services", "submit_requests"],
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+        }
+      }
+    ];
+
+    // Check credentials
+    const matchedCredential = demoCredentials.find(
+      cred => cred.email === email && cred.password === password
+    );
+
+    if (matchedCredential) {
       setIsAuthenticated(true);
-      setUser(userData);
-      
-      localStorage.setItem("zenith_auth", JSON.stringify({ user: userData }));
+      setUser(matchedCredential.userData);
+      localStorage.setItem("zenith_auth", JSON.stringify({ user: matchedCredential.userData }));
       return true;
     }
+    
     return false;
   };
 
