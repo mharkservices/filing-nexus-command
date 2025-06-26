@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Shield, Lock, Mail, User, UserCog, Users } from "lucide-react";
+import { Shield, Lock, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 
@@ -28,62 +28,19 @@ const LoginPage = () => {
       if (success) {
         toast({
           title: "Login Successful",
-          description: "Welcome to ZenithFilings Dashboard",
+          description: "Welcome to ZenithFilings Admin Dashboard",
         });
       } else {
         toast({
           title: "Login Failed",
-          description: "Invalid credentials. Please check your email and password.",
+          description: "Invalid credentials. Please try again.",
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error("Login error:", error);
       toast({
         title: "Error",
         description: "An error occurred during login.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async (type: 'admin' | 'user' | 'staff') => {
-    setIsLoading(true);
-    let credentials;
-    
-    switch (type) {
-      case 'admin':
-        credentials = { email: 'admin@zenithfilings.com', password: 'admin123' };
-        break;
-      case 'user':
-        credentials = { email: 'user@zenithfilings.com', password: 'user123' };
-        break;
-      case 'staff':
-        credentials = { email: 'staff@zenithfilings.com', password: 'staff123' };
-        break;
-    }
-    
-    try {
-      const success = await login(credentials.email, credentials.password);
-      if (success) {
-        toast({
-          title: "Demo Login Successful",
-          description: `Logged in as ${type.charAt(0).toUpperCase() + type.slice(1)}`,
-        });
-      } else {
-        toast({
-          title: "Demo Login Failed",
-          description: "Something went wrong with the demo login.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Demo login error:", error);
-      toast({
-        title: "Error",
-        description: "Demo login failed.",
         variant: "destructive",
       });
     } finally {
@@ -109,10 +66,10 @@ const LoginPage = () => {
             ZenithFilings
           </CardTitle>
           <CardDescription className="text-lg font-medium text-gray-600">
-            Business Services Dashboard
+            Super Admin Dashboard
           </CardDescription>
           <CardDescription className="text-sm text-gray-500 mt-2">
-            Secure access to your account
+            Secure access to administrative controls
           </CardDescription>
         </CardHeader>
         
@@ -127,7 +84,7 @@ const LoginPage = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="admin@zenithfilings.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 h-12"
@@ -163,67 +120,12 @@ const LoginPage = () => {
             </Button>
           </form>
           
-          {/* Demo Login Buttons */}
-          <div className="mt-6 space-y-3">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or try demo accounts</span>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-2">
-              <Button
-                variant="outline"
-                onClick={() => handleDemoLogin('admin')}
-                disabled={isLoading}
-                className="h-16 flex flex-col items-center justify-center space-y-1 hover:bg-blue-50 text-xs"
-              >
-                <UserCog className="w-4 h-4" />
-                <span>Admin</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleDemoLogin('staff')}
-                disabled={isLoading}
-                className="h-16 flex flex-col items-center justify-center space-y-1 hover:bg-purple-50 text-xs"
-              >
-                <Users className="w-4 h-4" />
-                <span>Staff</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleDemoLogin('user')}
-                disabled={isLoading}
-                className="h-16 flex flex-col items-center justify-center space-y-1 hover:bg-green-50 text-xs"
-              >
-                <User className="w-4 h-4" />
-                <span>User</span>
-              </Button>
-            </div>
-          </div>
-          
-          {/* Demo Credentials Info */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-600 text-center mb-3">Demo Credentials:</p>
-            <div className="space-y-2 text-xs text-gray-500">
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Admin:</span>
-                <span>admin@zenithfilings.com / admin123</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Staff:</span>
-                <span>staff@zenithfilings.com / staff123</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-medium">User:</span>
-                <span>user@zenithfilings.com / user123</span>
-              </div>
-            </div>
+            <p className="text-sm text-gray-600 text-center mb-2">Demo Credentials:</p>
+            <p className="text-xs text-gray-500 text-center">
+              Email: admin@zenithfilings.com<br />
+              Password: admin123
+            </p>
           </div>
         </CardContent>
       </Card>

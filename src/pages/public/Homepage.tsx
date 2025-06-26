@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Shield, Clock, Users, CheckCircle, ArrowRight, Building, Star, LogIn, UserPlus } from 'lucide-react';
+import { FileText, Shield, Clock, Users, CheckCircle, ArrowRight, Building, Star } from 'lucide-react';
 import PublicLayout from '@/components/public/PublicLayout';
 
 const Homepage = () => {
@@ -60,7 +60,7 @@ const Homepage = () => {
               Register your company online in just 15 minutes. Trusted by over 50,000+ entrepreneurs 
               across India for hassle-free business registration and compliance.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button size="lg" className="bg-orange-600 hover:bg-orange-700" asChild>
                 <Link to="/services">
                   Start Registration
@@ -69,22 +69,6 @@ const Homepage = () => {
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link to="/contact">Talk to Expert</Link>
-              </Button>
-            </div>
-            
-            {/* Login/Signup Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
-              <Button variant="outline" className="border-orange-200 text-orange-700 hover:bg-orange-50" asChild>
-                <Link to="/login">
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login
-                </Link>
-              </Button>
-              <Button variant="outline" className="border-sky-200 text-sky-700 hover:bg-sky-50" asChild>
-                <Link to="/login">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Sign Up
-                </Link>
               </Button>
             </div>
             
@@ -198,17 +182,9 @@ const Homepage = () => {
             Get your business registered today with India's most trusted platform. 
             Quick, affordable, and completely online.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="bg-white text-orange-600 hover:bg-gray-50" asChild>
-              <Link to="/contact">Get Started Now</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-orange-600" asChild>
-              <Link to="/login">
-                <LogIn className="mr-2 h-4 w-4" />
-                Access Portal
-              </Link>
-            </Button>
-          </div>
+          <Button size="lg" variant="secondary" className="bg-white text-orange-600 hover:bg-gray-50" asChild>
+            <Link to="/contact">Get Started Now</Link>
+          </Button>
         </div>
       </section>
     </PublicLayout>

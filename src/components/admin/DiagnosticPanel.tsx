@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import {
   Wifi,
   HardDrive,
   Cpu,
-  MemoryStick,
+  Memory,
   Activity,
   AlertTriangle,
   CheckCircle,
@@ -56,7 +57,7 @@ const DiagnosticPanel = () => {
       unit: "%",
       status: "healthy",
       threshold: 85,
-      icon: <MemoryStick className="w-4 h-4" />
+      icon: <Memory className="w-4 h-4" />
     },
     {
       name: "Disk Usage",
