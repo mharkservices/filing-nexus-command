@@ -15,9 +15,82 @@ import {
   Calendar
 } from "lucide-react";
 import { useState } from "react";
+import { ServiceCategory } from "@/types/service";
 
 const Analytics = () => {
   const [timeframe, setTimeframe] = useState<"week" | "month" | "quarter" | "year">("month");
+
+  // Mock services data for analytics
+  const mockServices: ServiceCategory[] = [
+    {
+      id: "1",
+      name: "Private Limited Company Registration",
+      description: "Complete registration of Private Limited Company with all legal formalities",
+      level: "main",
+      status: "active",
+      documentRequirements: [],
+      pricing: {
+        basePrice: 6999,
+        additionalFees: [],
+        discounts: [],
+        currency: "INR"
+      },
+      order: 1,
+      createdDate: "2024-01-01",
+      lastModified: "2024-01-15"
+    },
+    {
+      id: "2",
+      name: "GST Registration",
+      description: "Goods and Services Tax registration for businesses",
+      level: "main",
+      status: "active",
+      documentRequirements: [],
+      pricing: {
+        basePrice: 2499,
+        additionalFees: [],
+        discounts: [],
+        currency: "INR"
+      },
+      order: 2,
+      createdDate: "2024-01-02",
+      lastModified: "2024-01-14"
+    },
+    {
+      id: "3",
+      name: "Trademark Registration",
+      description: "Protect your brand with trademark registration",
+      level: "main",
+      status: "active",
+      documentRequirements: [],
+      pricing: {
+        basePrice: 4999,
+        additionalFees: [],
+        discounts: [],
+        currency: "INR"
+      },
+      order: 3,
+      createdDate: "2024-01-03",
+      lastModified: "2024-01-13"
+    },
+    {
+      id: "4",
+      name: "Income Tax Filing",
+      description: "Annual income tax filing service",
+      level: "main",
+      status: "active",
+      documentRequirements: [],
+      pricing: {
+        basePrice: 2000,
+        additionalFees: [],
+        discounts: [],
+        currency: "INR"
+      },
+      order: 4,
+      createdDate: "2024-01-04",
+      lastModified: "2024-01-12"
+    }
+  ];
 
   const handleExportReport = () => {
     // Mock export functionality
@@ -120,7 +193,7 @@ const Analytics = () => {
           </TabsList>
 
           <TabsContent value="performance" className="space-y-6">
-            <ServiceStats timeframe={timeframe} />
+            <ServiceStats services={mockServices} timeframe={timeframe} />
           </TabsContent>
 
           <TabsContent value="system" className="space-y-6">
