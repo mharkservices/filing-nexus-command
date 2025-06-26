@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -13,8 +12,10 @@ import {
   AlertTriangle,
   DollarSign
 } from "lucide-react";
+import { ServiceCategory } from "@/types/service";
 
 interface ServiceStatsProps {
+  services: ServiceCategory[];
   timeframe?: "week" | "month" | "quarter" | "year";
 }
 
@@ -30,7 +31,7 @@ interface ServiceMetrics {
   trendPercentage: number;
 }
 
-const ServiceStats = ({ timeframe = "month" }: ServiceStatsProps) => {
+const ServiceStats = ({ services, timeframe = "month" }: ServiceStatsProps) => {
   // Mock data - in real implementation, this would come from API
   const metrics: ServiceMetrics[] = [
     {
