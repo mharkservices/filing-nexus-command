@@ -28,14 +28,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Simulate checking for stored auth
     const storedAuth = localStorage.getItem("zenith_auth");
     if (storedAuth) {
-      const authData = JSON.parse(storedAuth);
-      setIsAuthenticated(true);
-      setUser(authData.user);
+      try {
+        const authData = JSON.parse(storedAuth);
+        if (authData && authData.user) {
+          setIsAuthenticated(true);
+          setUser(authData.user);
+        }
+      } catch (error) {
+        console.error("Error parsing stored auth:", error);
+        localStorage.removeItem("zenith_auth");
+      }
     }
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Demo login credentials
+    console.log("Attempting login with:", { email, password });
+    
+    // Demo login credentials - exact matches required
     const demoCredentials = [
       {
         email: "admin@zenithfilings.com",
@@ -50,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       },
       {
-        email: "user@zenithfilings.com",
+        email: "user@zenithfilings.com", 
         password: "user123",
         userData: {
           id: "2",
@@ -60,21 +69,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           permissions: ["view_services", "submit_requests"],
           avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
         }
+      },
+      {
+        email: "staff@zenithfilings.com",
+        password: "staff123", 
+        userData: {
+          id: "3",
+          name: "Staff Member",
+          email: "staff@zenithfilings.com",
+          role: "editor" as const,
+          permissions: ["view_services", "manage_content", "view_users"],
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+        }
       }
     ];
 
-    // Check credentials
+    // Trim whitespace and check credentials
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+    
     const matchedCredential = demoCredentials.find(
-      cred => cred.email === email && cred.password === password
+      cred => cred.email.toLowerCase() === trimmedEmail && cred.password === trimmedPassword
     );
+
+    console.log("Credential match found:", !!matchedCredential);
 
     if (matchedCredential) {
       setIsAuthenticated(true);
       setUser(matchedCredential.userData);
       localStorage.setItem("zenith_auth", JSON.stringify({ user: matchedCredential.userData }));
+      console.log("Login successful for:", matchedCredential.userData.name);
       return true;
     }
     
+    console.log("Login failed - no matching credentials");
     return false;
   };
 
@@ -82,6 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem("zenith_auth");
+    console.log("User logged out");
   };
 
   const checkPermission = (permission: string): boolean => {
